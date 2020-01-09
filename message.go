@@ -122,7 +122,12 @@ func (m *Message) SetHeaders(h map[string][]string) {
 
 // SetAddressHeader sets an address to the given header field.
 func (m *Message) SetAddressHeader(field, address, name string) {
-	m.header[field] = []string{m.FormatAddress(address, name)}
+	if v, found := m.header[field]; found {
+		v = append(v, m.FormatAddress(address, name))
+		m.header[field] = v
+	}else{
+		m.header[field] = []string{m.FormatAddress(address, name)}
+	}
 }
 
 // FormatAddress formats an address and a name as a valid RFC 5322 address.
